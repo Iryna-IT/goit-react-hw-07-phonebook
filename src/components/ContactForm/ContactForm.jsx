@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import itemsActions from '../../redux/items/items-actions';
+import { itemsOperations, itemsSelectors } from '../../redux/items';
+
 import isUnique from '../../functions/isUnique';
+
 import styles from './ContactForm.module.css';
-import { v4 as uuidv4 } from 'uuid';
 
 class ContactForm extends Component {
   state = {
@@ -42,17 +43,14 @@ class ContactForm extends Component {
     if (!isUnique(existContacts, this.state.name)) {
       return alert(`${this.state.name} is already in contacts!`);
     } else {
-      const id = uuidv4();
-      this.setState({ id: id });
-
-      onAdd({ id, name, number });
+      onAdd({ name, number });
 
       this.reset();
     }
   };
 
   reset = () => {
-    this.setState({ id: '', name: '', number: '' });
+    this.setState({ name: '', number: '' });
   };
 
   render() {
@@ -99,12 +97,12 @@ class ContactForm extends Component {
   }
 }
 
-const mapStateToProps = ({ contacts: { items } }) => ({
-  existContacts: items,
+const mapStateToProps = state => ({
+  existContacts: itemsSelectors.getExistContacts(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  onAdd: newContact => dispatch(itemsActions.addContact(newContact)),
+  onAdd: newContact => dispatch(itemsOperations.addContact(newContact)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);

@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import ContactForm from '../components/ContactForm';
 import Filter from './Filter';
 import ContactList from '../components/ContactList';
+
+import { itemsSelectors } from '../redux/items';
 
 import styles from './App.module.css';
 
@@ -14,10 +17,14 @@ class App extends Component {
         <ContactForm />
         <h2>Contacts</h2>
         <Filter />
+        {this.props.isLoadingContacts && <h1>Loading...</h1>}
         <ContactList />
       </div>
     );
   }
 }
+const mapStateToProps = state => ({
+  isLoadingContacts: itemsSelectors.getLoading(state),
+});
 
-export default App;
+export default connect(mapStateToProps, null)(App);

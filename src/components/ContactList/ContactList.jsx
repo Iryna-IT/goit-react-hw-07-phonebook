@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import itemsActions from '../../redux/items/items-actions';
-import getContactsListToShow from '../../functions/getContactsListToShow';
+import { itemsOperations, itemsSelectors } from '../../redux/items';
 
 import styles from './ContactList.module.css';
 
@@ -22,6 +21,10 @@ class ContactList extends Component {
     ),
     onDelete: PropTypes.func,
   };
+
+  componentDidMount() {
+    this.props.fetchContacts();
+  }
 
   render() {
     const { existContacts } = this.props;
@@ -84,12 +87,13 @@ class Contact extends Component {
   }
 }
 
-const mapStateToProps = ({ contacts: { items, filter } }) => ({
-  existContacts: getContactsListToShow(items, filter),
+const mapStateToProps = state => ({
+  existContacts: itemsSelectors.getContactsListToShow(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  onDelete: contactId => dispatch(itemsActions.deleteContact(contactId)),
+  fetchContacts: () => dispatch(itemsOperations.fetchContacts()),
+  onDelete: contactId => dispatch(itemsOperations.deleteContact(contactId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContactList);

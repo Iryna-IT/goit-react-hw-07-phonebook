@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { filterContacts } from '../../redux/filter/filter-actions';
+import { filterOperations } from '../../redux/filter/';
 
 import styles from './Filter.module.css';
 
@@ -31,7 +31,8 @@ class Filter extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  onSearch: event => dispatch(filterContacts(event.currentTarget.value)),
+  onSearch: event =>
+    dispatch(filterOperations.filterContacts(event.currentTarget.value)),
 });
 
 export default connect(null, mapDispatchToProps)(Filter);
